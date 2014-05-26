@@ -29,9 +29,9 @@ public class GlobalCommentsApplication extends Application {
 		ParseACL.setDefaultACL(defaultACL, true);
 		
 		// test that parse is working
-		ParseObject testObject = new ParseObject("TestObject");
-		testObject.put("foo", "bar");
-		testObject.saveInBackground();
+		//ParseObject testObject = new ParseObject("TestObject");
+		//testObject.put("foo", "bar");
+		//testObject.saveInBackground();
 	}
 
 }
