@@ -24,3 +24,4 @@ proguard/
 
 # CTS added - don't include private application data
 PrivateAppData.java
+maps_api.xml

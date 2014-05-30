@@ -14,27 +14,6 @@
         android:layout_height="wrap_content"
         android:text="@string/login_enter" />
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/login_error_message"
-        android:layout_marginTop="66dp"
-        android:ems="10"
-        android:hint="@string/login_username" />
-
-    <EditText
-        android:id="@+id/password1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username"
-        android:layout_alignRight="@+id/username"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:hint="@string/login_password"
-        android:inputType="textPassword" />
-
     <TextView
         android:id="@+id/login_error_message"
         android:layout_width="wrap_content"
@@ -62,5 +41,29 @@
         android:text="@string/login_createAccount"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_error_message"
+        android:layout_below="@+id/login_error_message"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/login_username" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/password1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/username"
+        android:layout_below="@+id/username"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="@string/login_password"
+        android:inputType="textPassword" />
 
 </RelativeLayout>

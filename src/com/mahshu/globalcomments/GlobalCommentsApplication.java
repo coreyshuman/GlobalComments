@@ -8,6 +8,7 @@ import com.parse.ParseUser;
 import android.app.Application;
 import android.util.Log;
 
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mahshu.globalcomments.PrivateAppData;
 
 public class GlobalCommentsApplication extends Application {
@@ -15,6 +16,8 @@ public class GlobalCommentsApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
+		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		
 		// Add your initialization code here
 		Parse.initialize(this, PrivateAppData.PARSE_APP_ID.toString(), PrivateAppData.PARSE_CLIENT_KEY.toString());
 		Log.d("GlobCom", "Parse Init");

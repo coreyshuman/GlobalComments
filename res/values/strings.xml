@@ -13,5 +13,8 @@
     <string name="signup_text">Create a username and password.</string>
     <string name="signup_repeat_password">Repeat Password</string>
     <string name="signup_signup">Sign Up</string>
+    <string name="post_create">Create a new post</string>
+    <string name="post">Post</string>
+    <string name="post_hint">Type Message Here</string>
 
 </resources>
