@@ -18,6 +18,9 @@ public class GlobalCommentsApplication extends Application {
 
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		
+		// initialize subclasses
+		ParseObject.registerSubclass(GlobalPost.class);
+		
 		// Add your initialization code here
 		Parse.initialize(this, PrivateAppData.PARSE_APP_ID.toString(), PrivateAppData.PARSE_CLIENT_KEY.toString());
 		Log.d("GlobCom", "Parse Init");

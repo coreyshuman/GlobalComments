@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
 						if(e != null) {
 							errorView.setText(e.getMessage());
 						} else {
-							Toast.makeText(LoginActivity.this, user.getSessionToken(), Toast.LENGTH_LONG).show();
+							//Toast.makeText(LoginActivity.this, user.getSessionToken(), Toast.LENGTH_LONG).show();
 							Intent postIntent = new Intent(LoginActivity.this, CreatePostActivity.class);
 							startActivity(postIntent);
 						}

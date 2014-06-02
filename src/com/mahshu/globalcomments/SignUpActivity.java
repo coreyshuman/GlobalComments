@@ -57,7 +57,7 @@ public class SignUpActivity extends Activity {
 					ret = false;
 					return;
 				}
-				
+				// cts todo: use form error validation as well here
 				if(isEmpty(usernameView)) {
 					errorMessage.append("Please enter a username.");
 					errorView.setText(errorMessage);
