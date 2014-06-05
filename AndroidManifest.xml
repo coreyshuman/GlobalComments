@@ -50,6 +50,7 @@
         
 
         <activity android:name="CreatePostActivity"></activity>
+        <activity android:name="MapActivity"></activity>
     </application>
 
 </manifest>

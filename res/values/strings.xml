@@ -16,5 +16,8 @@
     <string name="post_create">Create a new post</string>
     <string name="post">Post</string>
     <string name="post_hint">Type Message Here</string>
+    <string name="postComment">Post Comment</string>
+    <string name="post_tooFar">This comment is too far away for you to read.</string>
+    <string name="search_range">Search Range (ft):</string>
 
 </resources>

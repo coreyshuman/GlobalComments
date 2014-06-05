@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -63,6 +64,7 @@ public class CreatePostActivity extends FragmentActivity
 	private EditText postMessage;
 	private TextView messageCount;
 	private Button btnPost;
+	private Button btnCancel;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -79,6 +81,7 @@ public class CreatePostActivity extends FragmentActivity
 	    postMessage = (EditText) findViewById(R.id.post_message);
 	    messageCount = (TextView)findViewById(R.id.post_count);
 	    btnPost = (Button)findViewById(R.id.post_btnPost);
+	    btnCancel = (Button)findViewById(R.id.post_btnCancel);
 	    
 	    postMessage.addTextChangedListener(new TextWatcher() {
 	    	public void afterTextChanged(Editable s) {
@@ -91,6 +94,13 @@ public class CreatePostActivity extends FragmentActivity
 	    	
 	    	public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
+	    btnCancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
 	    });
 	    btnPost.setOnClickListener(new OnClickListener() {
 
@@ -143,7 +153,8 @@ public class CreatePostActivity extends FragmentActivity
 		              }
 		            });
 		            
-		            Toast.makeText(CreatePostActivity.this, "post done", Toast.LENGTH_LONG).show();
+		            Toast.makeText(CreatePostActivity.this, "Comment Posted!", Toast.LENGTH_SHORT).show();
+		            finish();
 				}
 			}
 	    	
