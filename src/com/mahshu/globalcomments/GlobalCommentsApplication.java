@@ -6,6 +6,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -26,13 +27,13 @@ public class GlobalCommentsApplication extends Application {
 		Log.d("GlobCom", "Parse Init");
 		Log.d("GlobCom", "Parse App: " .concat(PrivateAppData.PARSE_APP_ID.toString()));
 
-		ParseUser.enableAutomaticUser();
 		ParseACL defaultACL = new ParseACL();
 	    
 		// If you would like all objects to be private by default, remove this line.
 		defaultACL.setPublicReadAccess(true);
 		
 		ParseACL.setDefaultACL(defaultACL, true);
+//		ParseUser.logOut();//cts debug
 		
 		// test that parse is working
 		//ParseObject testObject = new ParseObject("TestObject");

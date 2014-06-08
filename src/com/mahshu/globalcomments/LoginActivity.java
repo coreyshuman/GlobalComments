@@ -24,8 +24,20 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_login);
 		Log.d("GlobCom", "LoginActivity");
+		
+		// determine which page to load
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser != null) {
+			// send to commentview page
+			Log.d("GlobCom", "Goto CommentListActivity");
+			Toast.makeText(this, "User: " + currentUser.getUsername(), Toast.LENGTH_LONG).show();
+			Intent nextIntent = new Intent(this, CommentListActivity.class);
+			startActivity(nextIntent);
+			finish();
+		} 
 		
 		// get login form data
 		usernameView = (EditText)findViewById(R.id.username);
@@ -76,6 +88,7 @@ public class LoginActivity extends Activity {
 						} else {
 							Intent mapIntent = new Intent(LoginActivity.this, MapActivity.class);
 							startActivity(mapIntent);
+							finish(); //cts debug
 						}
 					}
 				});

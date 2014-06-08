@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/lv_commentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:lines="3"
+        android:maxLines="3"
+        android:singleLine="false"
+        android:text="This is an example test post comment! User added this message manually. Hello world." />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lv_commentText"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lv_distanceText"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="1000ft" />
+
+        <ImageView
+            android:id="@+id/lv_dirImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/dir_arrow" />
+
+        <ImageView
+            android:id="@+id/lv_upvoteImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/up_arrow" />
+
+        <TextView
+            android:id="@+id/lv_upvoteText"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:text="99+" />
+
+        <ImageView
+            android:id="@+id/lv_downvoteImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/down_arrow" />
+
+        <TextView
+            android:id="@+id/lv_downvoteText"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:text="17" />
+
+    </LinearLayout>
+    
+            <TextView
+            android:id="@+id/lv_usernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+        android:layout_below="@+id/lv_commentText"
+            android:text="UserNameHere" />
+
+</RelativeLayout>

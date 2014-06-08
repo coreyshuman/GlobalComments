@@ -51,6 +51,7 @@
 
         <activity android:name="CreatePostActivity"></activity>
         <activity android:name="MapActivity"></activity>
+        <activity android:name="CommentListActivity"></activity>
     </application>
 
 </manifest>
