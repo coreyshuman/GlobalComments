@@ -11,6 +11,11 @@ import com.parse.ParseUser;
  */
 @ParseClassName("GlobalPost")
 public class GlobalPost extends ParseObject {
+	public void init() {
+		put("upvotes", 0);
+		put("downvotes", 0);
+	}
+	
   public String getText() {
     return getString("text");
   }
@@ -33,6 +38,14 @@ public class GlobalPost extends ParseObject {
 
   public void setLocation(ParseGeoPoint value) {
     put("location", value);
+  }
+  
+  public int getUpVotes() {
+	  return getInt("upvotes");
+  }
+  
+  public int getDownVotes() {
+	  return getInt("downvotes");
   }
 
   public static ParseQuery<GlobalPost> getQuery() {

@@ -136,6 +136,7 @@ public class CreatePostActivity extends FragmentActivity
 			        }
 			        // Create a post.
 		            GlobalPost post = new GlobalPost();
+		            post.init();
 		            final ParseGeoPoint curPoint = geoPointFromLocation(myLoc);
 		            // Set the location to the current user's location
 		            post.setLocation(curPoint);

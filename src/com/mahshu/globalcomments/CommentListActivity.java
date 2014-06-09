@@ -23,7 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.ParseACL;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
@@ -154,10 +156,61 @@ public class CommentListActivity extends FragmentActivity
 	        if (view == null) {
 	          view = View.inflate(getContext(), R.layout.lv_commentlist_item, null);
 	        }
-	        TextView contentView = (TextView) view.findViewById(R.id.lv_commentText);
-	        TextView usernameView = (TextView) view.findViewById(R.id.lv_usernameText);
+	        final TextView contentView = (TextView) view.findViewById(R.id.lv_commentText);
+	        final TextView usernameView = (TextView) view.findViewById(R.id.lv_usernameText);
+	        final ImageView upvoteView = (ImageView) view.findViewById(R.id.lv_upvoteImage);
+	        final TextView upvoteCount = (TextView) view.findViewById(R.id.lv_upvoteText);
+	        final ImageView downvoteView = (ImageView) view.findViewById(R.id.lv_downvoteImage);
+	        final TextView downvoteCount = (TextView) view.findViewById(R.id.lv_downvoteText);
+
+
+	        
 	        contentView.setText(post.getText());
 	        usernameView.setText(post.getUser().getUsername());
+	        upvoteCount.setText(Integer.toString(post.getUpVotes()));
+	        downvoteCount.setText(Integer.toString(post.getDownVotes()));
+	        final String postId = post.getObjectId();
+	        upvoteView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					HashMap<String, Object> params = new HashMap<String, Object>();
+					params.put("userId", ParseUser.getCurrentUser().getObjectId());
+					params.put("postId", postId);
+					params.put("type", "u");
+					Log.d("GlobCom", "sendrequest");
+					ParseCloud.callFunctionInBackground("incrementVoteCount", params, new FunctionCallback<String>() {
+						  public void done(String result, ParseException e) {
+						    if (e == null) {
+						      Log.d("GlobCom", "click: " + result);
+						      upvoteCount.setText(result);
+						    }
+						    else
+						    	Log.d("GlobCom", "click: " + e.getMessage());
+						  }
+						});		
+				}
+	        });
+	        downvoteView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					HashMap<String, Object> params = new HashMap<String, Object>();
+					params.put("userId", ParseUser.getCurrentUser().getObjectId());
+					params.put("postId", postId);
+					params.put("type", "d");
+					Log.d("GlobCom", "sendrequest");
+					ParseCloud.callFunctionInBackground("incrementVoteCount", params, new FunctionCallback<String>() {
+						  public void done(String result, ParseException e) {
+						    if (e == null) {
+						      Log.d("GlobCom", "click: " + result);
+						      downvoteCount.setText(result);
+						    }
+						    else
+						    	Log.d("GlobCom", "click: " + e.getMessage());
+						  }
+						});		
+				}
+	        });
+	        
 	        return view;
 	      }
 	    };
@@ -177,9 +230,51 @@ public class CommentListActivity extends FragmentActivity
     private ParseGeoPoint geoPointFromLocation(Location loc) {
         return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
       }
+    
+    /*
+     * Called when the Activity is no longer visible at all. Stop updates and disconnect.
+     */
+    @Override
+    public void onStop() {
+      // If the client is connected
+      if (lc.isConnected()) {
+    	  lc.removeLocationUpdates(this); //stop periodic updates
+      }
+
+      // After disconnect() is called, the client is considered "dead".
+      lc.disconnect();
+
+      super.onStop();
+    }
+
+    /*
+     * Called when the Activity is restarted, even before it becomes visible.
+     */
+    @Override
+    public void onStart() {
+      super.onStart();
+
+      // Connect to the location services client
+      lc.connect();
+    }
+    
+    /*
+     * Called when the Activity is resumed. Updates the view.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Checks the last saved location to show cached data if it's available
+        if (lastLocation != null) {
+    	    LatLng myLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());      
+    	  
+        }
+        doListQuery();
+    }
 	
 	@Override
     public void onLocationChanged(Location loc) {
+		Log.d("GlobCom", "CL locationChanged");
 		currentLocation = loc;
 		lastLocation = loc;
 		LatLng pos = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -189,19 +284,19 @@ public class CommentListActivity extends FragmentActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult arg0) {
-    	Log.d("GlobCom", "MV connectionFailed");
+    	Log.d("GlobCom", "CL connectionFailed");
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
-    	Log.d("GlobCom", "MV onConnected");
-        lc.requestLocationUpdates(lr, this);
+    	Log.d("GlobCom", "CL onConnected");
+        lc.requestLocationUpdates(lr, this); //periodic updates
 
     }
 
     @Override
     public void onDisconnected() {
-    	Log.d("GlobCom", "MV onDisconnect");
+    	Log.d("GlobCom", "CL onDisconnect");
     }
     
     /*
@@ -209,11 +304,10 @@ public class CommentListActivity extends FragmentActivity
      */
     private void doListQuery() {
       Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-      // If location info is available, load the data
       if (myLoc != null) {
-        // Refreshes the list view with new data based
-        // usually on updated location data.
+        // Refreshes the list view
         posts.loadObjects();
+        Log.d("GlobCom", "CL updateListView");
       }
     }
     
