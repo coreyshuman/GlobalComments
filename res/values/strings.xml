@@ -20,5 +20,6 @@
     <string name="post_tooFar">This comment is too far away for you to read.</string>
     <string name="search_range">Search Range (ft):</string>
     <string name="gotoMapView">Switch to Map View</string>
+    <string name="updateDist">Update Dist</string>
 
 </resources>
