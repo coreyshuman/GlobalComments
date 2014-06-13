@@ -36,6 +36,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -242,6 +243,49 @@ public class MapActivity extends FragmentActivity
     	Log.d("GlobCom", "MV onDisconnect");
     }
     
+    /*
+     * Called when the Activity is no longer visible at all. Stop updates and disconnect.
+     */
+    @Override
+    public void onStop() {
+      // If the client is connected
+      if (lc.isConnected()) {
+    	  lc.removeLocationUpdates(this); //stop periodic updates
+      }
+
+      // After disconnect() is called, the client is considered "dead".
+      lc.disconnect();
+
+      super.onStop();
+    }
+
+    /*
+     * Called when the Activity is restarted, even before it becomes visible.
+     */
+    @Override
+    public void onStart() {
+      super.onStart();
+
+      // Connect to the location services client
+      lc.connect();
+    }
+    
+    /*
+     * Called when the Activity is resumed. Updates the view.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Checks the last saved location to show cached data if it's available
+        if (lastLocation != null) {
+    	    LatLng myLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());      
+    	    updateCircle(myLatLng);
+        }
+
+        updateMap();
+    }
+    
+    
     private void updateMap() {
     	
     	Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
@@ -294,7 +338,7 @@ public class MapActivity extends FragmentActivity
                     // Display a red marker with a predefined title and no snippet
                     markerOpts =
                         markerOpts.title(getResources().getString(R.string.post_tooFar)).icon(
-                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        		BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
                   } else {
                     // Check for an existing in range marker
                     if (oldMarker != null) {
@@ -310,7 +354,7 @@ public class MapActivity extends FragmentActivity
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy hh:mm");
                     markerOpts =
                         markerOpts.title(post.getText()).snippet(post.getUser().getUsername() + " " + sdf.format(post.getCreatedAt()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_green));
                   }
                   // Add a new marker
                   Marker marker = map.addMarker(markerOpts);

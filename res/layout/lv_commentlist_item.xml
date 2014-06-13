@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+	<TextView
+		android:id="@+id/lv_usernameText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="UserNameHere" />
+                
     <TextView
         android:id="@+id/lv_commentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:lines="3"
-        android:maxLines="3"
+        android:layout_below="@+id/lv_usernameText"
+        android:lines="2"
+        android:maxLines="2"
         android:singleLine="false"
         android:text="This is an example test post comment! User added this message manually. Hello world." />
 
@@ -39,8 +44,8 @@
             android:id="@+id/lv_upvoteImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/up_arrow" />
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/up_arrow_gray" />
 
         <TextView
             android:id="@+id/lv_upvoteText"
@@ -52,22 +57,23 @@
             android:id="@+id/lv_downvoteImage"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/down_arrow" />
+            android:src="@drawable/down_arrow_gray" />
 
         <TextView
             android:id="@+id/lv_downvoteText"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:text="17" />
+        
 
     </LinearLayout>
     
-            <TextView
-            android:id="@+id/lv_usernameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-        android:layout_below="@+id/lv_commentText"
-            android:text="UserNameHere" />
+    <TextView
+		android:id="@+id/lv_dateText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/lv_commentText"
+		android:layout_alignParentRight="true"
+		android:text="10:03 AM 12/24/02" />
 
 </RelativeLayout>

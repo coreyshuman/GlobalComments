@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
+import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
@@ -47,6 +48,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -108,6 +110,7 @@ public class CommentListActivity extends FragmentActivity
 	private Location currentLocation;
 	private Location lastLocation;
 	private String selectedObjectId;
+	private boolean doubleBackToExitPressedOnce = false;
 	
 	private SensorManager mSensorManager;
 	Sensor accelerometer;
@@ -170,12 +173,27 @@ public class CommentListActivity extends FragmentActivity
 	    		if(radius > 100000){
 	    			radius = 100000;
 	    			SearchRange.setText(Float.toString(radius));
-	    		}
-	    		
-	    		doListQuery();
-				
-			}
-	    	
+	    		}	   
+	    		// CTS DEBUG ----------------------------------
+	    		HashMap<String, Object> params = new HashMap<String, Object>();
+				params.put("myLocation", geoPointFromLocation(lastLocation));
+				params.put("radius", radius * METERS_PER_FEET / METERS_PER_KILOMETER);
+				params.put("maxResults", MAX_POST_SEARCH_RESULTS);
+				Log.d("GlobCom", "sendrequest");
+				ParseCloud.callFunctionInBackground("getGlobalComments", params, new FunctionCallback<Object>() {
+					@Override  
+					public void done(Object result, ParseException e) {
+					    if (e == null) {
+					      //Log.d("GlobCom", "click: " + result);
+					      
+					    }
+					    else
+					    	Log.d("GlobCom", "click: " + e.getMessage());
+					  }
+					});	
+				// CTS DEBUG END ------------------------------
+	    		//doListQuery();				
+			}	    	
 	    });
 
 	    // Set up a customized query
@@ -208,19 +226,48 @@ public class CommentListActivity extends FragmentActivity
 	        final TextView downvoteCount = (TextView) view.findViewById(R.id.lv_downvoteText);
 	        final TextView distanceView = (TextView) view.findViewById(R.id.lv_distanceText);
 	        final ImageView directionView = (ImageView) view.findViewById(R.id.lv_dirImage);
+	        final TextView dateView = (TextView) view.findViewById(R.id.lv_dateText);
 	        
 	        
 
 	        //directionView.setRotation((float) calculateLatLngBearing(geoPointFromLocation(currentLocation) ,post.getLocation()));
 	        directionView.setTag(Float.valueOf((float)calculateLatLngBearing(geoPointFromLocation(currentLocation) ,post.getLocation())));
 	        distanceView.setText(getStringGeoPointDistance(geoPointFromLocation(currentLocation), post.getLocation()));
+	        
+	        //cts debug - doing the extra queries here SUCKS!!! Need to come back and make this more efficient (use cloud code)
+	        ParseQuery<Vote> query = Vote.getQuery();
+	        query.whereEqualTo("userId", post.getUser().getObjectId());
+	        query.whereEqualTo("postId", post.getObjectId());
+	        query.getFirstInBackground(new GetCallback<Vote>() {
+	        	@Override
+	        	public void done(Vote object, ParseException e) {
+	        		Log.d("GlobCom", "get vote done");
+	        		if(e != null) {
+	        			Log.d("GlobCom", "get vote fail");
+	        		} 
+	        		else if(object != null){
+	        			Log.d("GlobCom", "get vote success");
+	        	    	
+		        	    	if (object.getType() == "u") {
+		        	    		upvoteView.setImageResource(R.drawable.up_arrow);
+		        	    	}
+		        	    	else if(object.getType() == "d") {
+		        	    		downvoteView.setImageResource(R.drawable.down_arrow);
+		        	    	}
+	        	    	
+	        	    }
+	        		
+	        	  }
+
+	        });
 
 	        
 	        
 	        contentView.setText(post.getText());
-	        usernameView.setText(post.getUser().getUsername());
+	        usernameView.setText(post.getUser().getUsername() + ":");
 	        upvoteCount.setText(Integer.toString(post.getUpVotes()));
 	        downvoteCount.setText(Integer.toString(post.getDownVotes()));
+	        dateView.setText(post.getUpdatedAt().toString());
 	        final String postId = post.getObjectId();
 	        upvoteView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -263,8 +310,12 @@ public class CommentListActivity extends FragmentActivity
 				}
 	        });
 	        
+	        
+	        
 	        return view;
 	      }
+	      
+	      
 	    };
 	    
 	    // Disable automatic loading when the adapter is attached to a view.
@@ -476,5 +527,24 @@ public class CommentListActivity extends FragmentActivity
         	}
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;                       
+            }
+        }, 2000);
+    } 
     
 }

@@ -244,7 +244,7 @@ public class CreatePostActivity extends FragmentActivity
 	        map.animateCamera(cameraUpdate);
 	        if(curLocMarker == null){
 		     // create marker
-		        MarkerOptions marker = new MarkerOptions().position(pos).title("You");
+		        MarkerOptions marker = new MarkerOptions().position(pos).title("Your location");
 		     // Changing marker icon
 		        //marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_marker_icon)));
 		        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));

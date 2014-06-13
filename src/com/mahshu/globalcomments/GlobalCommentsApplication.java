@@ -21,6 +21,7 @@ public class GlobalCommentsApplication extends Application {
 		
 		// initialize subclasses
 		ParseObject.registerSubclass(GlobalPost.class);
+		ParseObject.registerSubclass(Vote.class);
 		
 		// Add your initialization code here
 		Parse.initialize(this, PrivateAppData.PARSE_APP_ID.toString(), PrivateAppData.PARSE_CLIENT_KEY.toString());
