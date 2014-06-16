@@ -50,7 +50,7 @@
     	    android:id="@+id/post_count"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
-    	    android:text="0 / 140"
+    	    android:text=""
     	    android:layout_alignParentRight="true" >
     	</TextView>
     </RelativeLayout>

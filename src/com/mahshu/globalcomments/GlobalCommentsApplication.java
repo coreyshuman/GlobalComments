@@ -6,13 +6,20 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mahshu.globalcomments.PrivateAppData;
 
 public class GlobalCommentsApplication extends Application {
+	
+	private static final String SEARCH_DISTANCE = "search_distance";
+	
+	private static SharedPreferences preferences;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -25,8 +32,7 @@ public class GlobalCommentsApplication extends Application {
 		
 		// Add your initialization code here
 		Parse.initialize(this, PrivateAppData.PARSE_APP_ID.toString(), PrivateAppData.PARSE_CLIENT_KEY.toString());
-		Log.d("GlobCom", "Parse Init");
-		Log.d("GlobCom", "Parse App: " .concat(PrivateAppData.PARSE_APP_ID.toString()));
+		preferences = getSharedPreferences("com.parse.anywall", Context.MODE_PRIVATE);
 
 		ParseACL defaultACL = new ParseACL();
 	    
@@ -36,10 +42,14 @@ public class GlobalCommentsApplication extends Application {
 		ParseACL.setDefaultACL(defaultACL, true);
 //		ParseUser.logOut();//cts debug
 		
-		// test that parse is working
-		//ParseObject testObject = new ParseObject("TestObject");
-		//testObject.put("foo", "bar");
-		//testObject.saveInBackground();
+	}
+	
+	public static float getSearchDistance() {
+		return preferences.getFloat(SEARCH_DISTANCE, 2000);
+	}
+
+	public static void setSearchDistance(float value) {
+		preferences.edit().putFloat(SEARCH_DISTANCE, value).commit();
 	}
 
 }

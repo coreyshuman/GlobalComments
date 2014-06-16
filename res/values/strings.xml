@@ -21,5 +21,12 @@
     <string name="search_range">Search Range (ft):</string>
     <string name="gotoMapView">Switch to Map View</string>
     <string name="updateDist">Update Dist</string>
+    <string name="search_distance">Search Distance (ft):</string>
+    <string name="num_300">300</string>
+    <string name="num_2000">2000</string>
+    <string name="num_5000">5000</string>
+    <string name="num_10000">10000</string>
+    <string name="log_out">Log Out</string>
+    <string name="enable_notificaitons">Enable Notifications</string>
 
 </resources>

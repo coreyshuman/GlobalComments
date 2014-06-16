@@ -52,4 +52,5 @@ public class GlobalPost extends ParseObject {
     return ParseQuery.getQuery(GlobalPost.class);
     //cts todo: add query range as input to this function
   }
+   
 }

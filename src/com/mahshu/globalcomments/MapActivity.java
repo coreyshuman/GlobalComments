@@ -83,15 +83,12 @@ public class MapActivity extends FragmentActivity
 	
 	private GoogleMap map;
 	 private final Map<String, Marker> mapMarkers = new HashMap<String, Marker>();
-	private LatLng latlng;
 	private LocationRequest  lr;
 	private LocationClient lc;
 	private SupportMapFragment MapFragment;
 	private boolean mapIsLoaded;
 	private boolean mapIsDoneInit;
-	private Marker curLocMarker = null;
 	private Button btnGotoPost;
-	private EditText SearchRange;
 	private Location currentLocation;
 	private Location lastLocation;
 	private String selectedObjectId;
@@ -109,7 +106,7 @@ public class MapActivity extends FragmentActivity
 	    super.onCreate(savedInstanceState);
 	    mapIsLoaded = false;
 	    mapIsDoneInit = false;
-	    radius = 1000;	//cts debug - hardcode
+	    radius =  GlobalCommentsApplication.getSearchDistance();
 	    lastRadius = radius;
 	    Log.d("GlobCom", "MapView onCreate");
 	    setContentView(R.layout.activity_mapview);
@@ -136,8 +133,6 @@ public class MapActivity extends FragmentActivity
 	    }
 	    
 	    btnGotoPost = (Button)findViewById(R.id.mv_postBtn);
-	    SearchRange = (EditText)findViewById(R.id.mv_searchRange);
-	    SearchRange.setText(Float.toString(radius));
 	    
 	    btnGotoPost.setOnClickListener(new OnClickListener() {
 
@@ -148,24 +143,6 @@ public class MapActivity extends FragmentActivity
 			}
 	    });
 
-	    SearchRange.addTextChangedListener(new TextWatcher() {
-	    	public void afterTextChanged(Editable s) {
-	    		if(s.length() > 0)
-	    			radius = Float.parseFloat(s.toString());
-	    		if(radius > 100000){
-	    			radius = 100000;
-	    			SearchRange.setText(Float.toString(radius));
-	    		}
-	    		
-	    		Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
-	    		LatLng pos = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-	    		updateCircle(pos);
-	    		
-	    	}
-	    	
-	    	public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
-	    });
 	}
 
     private void initilizeMap() {
@@ -276,12 +253,15 @@ public class MapActivity extends FragmentActivity
     @Override
     protected void onResume() {
         super.onResume();
+        radius =  GlobalCommentsApplication.getSearchDistance();
+	    lastRadius = radius;    
+	    
         // Checks the last saved location to show cached data if it's available
         if (lastLocation != null) {
     	    LatLng myLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());      
     	    updateCircle(myLatLng);
         }
-
+        
         updateMap();
     }
     

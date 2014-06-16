@@ -30,7 +30,9 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.Spannable;
 import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -49,15 +51,13 @@ public class CreatePostActivity extends FragmentActivity
 						com.google.android.gms.location.LocationListener
 						{
 	
-	private final static int MAX_POST_LENGTH = 140;
+	private final static int MAX_POST_LENGTH = 100;
 	
 	private GoogleMap map;
-	private LatLng latlng;
 	private LocationRequest  lr;
 	private LocationClient lc;
 	private SupportMapFragment MapFragment;
 	private boolean mapIsLoaded;
-	private ImageView iv;
 	private Location lastLocation = null;
 	private Location currentLocation = null;
 	private Marker curLocMarker = null;
@@ -65,6 +65,7 @@ public class CreatePostActivity extends FragmentActivity
 	private TextView messageCount;
 	private Button btnPost;
 	private Button btnCancel;
+	private int lastMsgCnt = 0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -80,16 +81,32 @@ public class CreatePostActivity extends FragmentActivity
 	    
 	    postMessage = (EditText) findViewById(R.id.post_message);
 	    messageCount = (TextView)findViewById(R.id.post_count);
+	    messageCount.setText("0 / " + Integer.toString(MAX_POST_LENGTH));
 	    btnPost = (Button)findViewById(R.id.post_btnPost);
 	    btnCancel = (Button)findViewById(R.id.post_btnCancel);
 	    
 	    postMessage.addTextChangedListener(new TextWatcher() {
 	    	public void afterTextChanged(Editable s) {
-	    		messageCount.setText(s.length() + " / " + MAX_POST_LENGTH);
-	    		if(s.length() > MAX_POST_LENGTH - 10)
-	    			messageCount.setTextColor(Color.RED);
-	    		else
-	    			messageCount.setTextColor(Color.BLACK);
+	    		if(s.length() != lastMsgCnt) {
+	    			lastMsgCnt = s.length();
+		    		messageCount.setText(s.length() + " / " + MAX_POST_LENGTH);
+		    		Spannable spanText = Spannable.Factory.getInstance().newSpannable(s.toString());
+		    		int cursorPos = postMessage.getSelectionEnd();
+		    		if(s.length() > MAX_POST_LENGTH) {
+		    			messageCount.setTextColor(Color.RED);
+		    			spanText.setSpan(new BackgroundColorSpan(0xFF993333), MAX_POST_LENGTH, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    		}
+		    		else if(s.length() > MAX_POST_LENGTH - 10) {
+		    			messageCount.setTextColor(Color.rgb(200, 140, 140));
+		    			spanText.setSpan(new BackgroundColorSpan(0x00000000), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    		}
+		    		else {
+		    			messageCount.setTextColor(Color.BLACK);
+		    			spanText.setSpan(new BackgroundColorSpan(0x00000000), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    		}
+		    		postMessage.setText(spanText);
+		    		postMessage.setSelection(cursorPos);
+	    		}
 	    	}
 	    	
 	    	public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -111,10 +128,10 @@ public class CreatePostActivity extends FragmentActivity
 				postLength = postMessage.getText().length();
 				if(postLength > MAX_POST_LENGTH) {
 					//create error
-					AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getBaseContext());
+					AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CreatePostActivity.this);
 					alertBuilder
 						.setTitle("Post Error")
-						.setMessage("Post cannot be longer than " + MAX_POST_LENGTH + " characters.")
+						.setMessage("Post cannot be longer than " + Integer.toString(MAX_POST_LENGTH) + " characters.")
 						.setCancelable(false)
 						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							@Override
@@ -123,8 +140,9 @@ public class CreatePostActivity extends FragmentActivity
 								
 							}
 						});
-					AlertDialog alertDialog = alertBuilder.create();
-					alertDialog.show();
+					alertBuilder.show();
+					//AlertDialog alertDialog = alertBuilder.create();
+					//alertDialog.show();
 				}
 				else
 				{

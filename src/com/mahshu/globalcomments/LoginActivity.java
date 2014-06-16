@@ -33,7 +33,7 @@ public class LoginActivity extends Activity {
 		if (currentUser != null) {
 			// send to commentview page
 			Log.d("GlobCom", "Goto CommentListActivity");
-			Toast.makeText(this, "User: " + currentUser.getUsername(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "User: " + currentUser.getUsername(), Toast.LENGTH_LONG).show();
 			Intent nextIntent = new Intent(this, CommentListActivity.class);
 			startActivity(nextIntent);
 			finish();
@@ -86,7 +86,7 @@ public class LoginActivity extends Activity {
 						if(e != null) {
 							errorView.setText(e.getMessage());
 						} else {
-							Intent mapIntent = new Intent(LoginActivity.this, MapActivity.class);
+							Intent mapIntent = new Intent(LoginActivity.this, CommentListActivity.class);
 							startActivity(mapIntent);
 							finish(); //cts debug
 						}
@@ -104,14 +104,6 @@ public class LoginActivity extends Activity {
 				startActivity(signupIntent);
 			}
 		});
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
-		Log.d("GlobCom", "LoginActivityOptions");
-		return true;
 	}
 
 
