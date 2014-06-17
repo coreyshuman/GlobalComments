@@ -67,11 +67,14 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,6 +102,7 @@ public class CommentListActivity extends FragmentActivity
 	private Runnable mUpdateTimeTask;
 	private boolean bTimeUpdateTaskRunning = false;
 	private SensorManager mSensorManager;
+	private Spinner orgSpin;
 	Sensor accelerometer;
 	Sensor magnetometer;
     float[] mGravity;
@@ -171,7 +175,33 @@ public class CommentListActivity extends FragmentActivity
 		          hTimeUpdateHandler.postDelayed(mUpdateTimeTask, TIME_UPDATE_INTERVAL);
 		     }
 		};
+		
+		orgSpin = (Spinner) findViewById(R.id.cl_orgSpin);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.organize, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		orgSpin.setAdapter(adapter);
+		
+		orgSpin.setOnItemSelectedListener(new OnItemSelectedListener() {
 
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				doListQuery();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		 	
 	}
 	
 	  @Override
@@ -243,6 +273,13 @@ public class CommentListActivity extends FragmentActivity
      */
     @Override
     protected void onResume() {
+    	if(GlobalCommentsApplication.isAppClosing()) {
+    		Log.d("GlobCom", "close app");
+    		GlobalCommentsApplication.clearAppClosing();
+    		Intent newIntent = new Intent(CommentListActivity.this, LoginActivity.class);
+    		startActivity(newIntent);
+    		finish();
+    	}
         super.onResume();
         // enable accel and mag
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
@@ -326,6 +363,8 @@ public class CommentListActivity extends FragmentActivity
     	  MyPostListAdapter.updateLocation(geoPointFromLocation(myLoc));
     	  MyPostListAdapter.updateSearchRadius(radius);
     	  MyPostListAdapter.getDataFromServer();
+    	  MyPostListAdapter.setOrganizeBy(orgSpin.getSelectedItem().toString());
+    	  //MyPostListAdapter.setOrganizeBy("age");
     	  StartTimeUpdateTask();
         Log.d("GlobCom", "CL updateListView");
       }

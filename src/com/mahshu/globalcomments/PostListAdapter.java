@@ -40,6 +40,7 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 	private double maxSearchRadiusFt;
 	private int maxSearchResults;
 	private ParseGeoPoint curLoc;
+	private String organizeBy;
 	private ArrayList<GlobalPostVote> listData;
 	private boolean listDataMux = false;
 	public PostListAdapter(Context context, ListView parent, ArrayList<GlobalPostVote> data, double searchRadius, int maxResults) {
@@ -49,6 +50,7 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 		this.maxSearchResults = maxResults;
 		this.listData = data;
 		this.parentView = parent;
+		this.organizeBy = "a";
 	}
 	
 	public void updateSearchRadius(double r) {
@@ -59,11 +61,16 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 		this.curLoc = loc;
 	}
 	
+	public void setOrganizeBy(String s) {
+		this.organizeBy = s;
+	}
+	
 	public void getDataFromServer() {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("myLocation", this.curLoc);
 		params.put("radius", this.maxSearchRadiusFt * FEET_PER_KILOMETER);
 		params.put("maxResults", this.maxSearchResults);
+		params.put("orderBy", this.organizeBy);
 		Log.d("GlobCom", "getDataFromServer");
 		listDataMux = true;
 		ParseCloud.callFunctionInBackground("getGlobalComments", params, new FunctionCallback<Object>() {
@@ -98,6 +105,7 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 	public View getView(int position, View contextView, ViewGroup parent) {
 		GlobalPostVote post = listData.get(position);
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final int fPos = position;
 		final String postId = post.getObjectId();
 		final View postView = inflater.inflate(R.layout.lv_commentlist_item, parent, false);
 		final TextView contentView = (TextView) postView.findViewById(R.id.lv_commentText);
@@ -153,6 +161,9 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 						      upvoteView.setImageResource(R.drawable.up_arrow);
 						      upvoteView.setTag("u");
 						      downvoteView.setTag("u");
+						      //must update array
+						      listData.get(fPos).setUpVotes(Integer.parseInt(result.trim()));
+						      listData.get(fPos).setVoteType("u");
 						    }
 						    else
 						    	Log.d("GlobCom", "click: " + e.getMessage());
@@ -184,6 +195,9 @@ public class PostListAdapter extends ArrayAdapter<GlobalPostVote> {
 						      downvoteView.setImageResource(R.drawable.down_arrow);
 						      upvoteView.setTag("d");
 						      downvoteView.setTag("d");
+						    //must update array
+						      listData.get(fPos).setUpVotes(Integer.parseInt(result.trim()));
+						      listData.get(fPos).setVoteType("d");
 						    }
 						    else
 						    	Log.d("GlobCom", "click: " + e.getMessage());

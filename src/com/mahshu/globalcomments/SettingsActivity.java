@@ -4,6 +4,8 @@ package com.mahshu.globalcomments;
 import com.parse.ParseUser;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -103,10 +105,27 @@ public class SettingsActivity extends Activity {
 	    btnLogOut.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ParseUser.logOut();
-				Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
-				startActivity(i);
-				finish();
+				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				    @Override
+				    public void onClick(DialogInterface dialog, int which) {
+				        switch (which){
+				        case DialogInterface.BUTTON_POSITIVE:
+				        	ParseUser.logOut();
+							GlobalCommentsApplication.setAppClosing();
+							finish();
+				            break;
+
+				        case DialogInterface.BUTTON_NEGATIVE:
+				            
+				            break;
+				        }
+				    }
+				};
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+				builder.setMessage("Are you sure you want to log out?").setPositiveButton("Yes", dialogClickListener)
+				    .setNegativeButton("No", dialogClickListener).show();
+				
 			}
 	    	
 	    });
@@ -114,13 +133,13 @@ public class SettingsActivity extends Activity {
 	
 	private void setSearchDistance() {
 		if(rbDist1.isChecked()) {
-			GlobalCommentsApplication.setSearchDistance(300);
-		} else if(rbDist1.isChecked()) {
-			GlobalCommentsApplication.setSearchDistance(2000);
-		} else if(rbDist1.isChecked()) {
-			GlobalCommentsApplication.setSearchDistance(5000);
+			GlobalCommentsApplication.setSearchDistance(300f);
+		} else if(rbDist2.isChecked()) {
+			GlobalCommentsApplication.setSearchDistance(2000f);
+		} else if(rbDist3.isChecked()) {
+			GlobalCommentsApplication.setSearchDistance(5000f);
 		}else {
-			GlobalCommentsApplication.setSearchDistance(10000);
+			GlobalCommentsApplication.setSearchDistance(10000f);
 		}
 	}
 

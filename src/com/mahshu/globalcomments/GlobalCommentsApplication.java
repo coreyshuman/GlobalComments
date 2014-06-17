@@ -19,6 +19,7 @@ public class GlobalCommentsApplication extends Application {
 	private static final String SEARCH_DISTANCE = "search_distance";
 	
 	private static SharedPreferences preferences;
+	private static boolean appClosing = false;
 	
 	@Override
 	public void onCreate() {
@@ -52,5 +53,16 @@ public class GlobalCommentsApplication extends Application {
 		preferences.edit().putFloat(SEARCH_DISTANCE, value).commit();
 	}
 
+	public static boolean isAppClosing() {
+		return appClosing;
+	}
+	
+	public static void setAppClosing() {
+		appClosing = true;
+	}
+	
+	public static void clearAppClosing() {
+		appClosing = false;
+	}
 }
 

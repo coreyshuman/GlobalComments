@@ -58,4 +58,18 @@ public class GlobalPostVote {
 		  public String getVoteType() {
 			  return (String)data.get("vote");
 		  }
+		  
+		  // following sets are used to temporarily update UI after casting a vote
+		  // this does not modify permanent data
+		  public void setVoteType(String v) {
+			  data.put("vote", v);
+		  }
+		  
+		  public void setUpVotes(int v) {
+			  data.put("upvotes", v);
+		  }
+		  
+		  public void setDownVotes(int v) {
+			  data.put("downvotes", v);
+		  }
 }

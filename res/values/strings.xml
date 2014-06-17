@@ -27,6 +27,11 @@
     <string name="num_5000">5000</string>
     <string name="num_10000">10000</string>
     <string name="log_out">Log Out</string>
-    <string name="enable_notificaitons">Enable Notifications</string>
+    <string name="organizeBy">Enable Notifications</string>
+    <string-array name="organize">
+        <item>Age</item>
+        <item>Popularity</item>
+        <item>Distance</item>
+    </string-array>
 
 </resources>
